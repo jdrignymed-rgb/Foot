@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roulette Ligue 1 – Équipe type</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1512;--panel:#16211c;--line:#2a3a32;--ink:#eef3ef;--mute:#93a59b;
+  --accent:#d7ff3a;--G:#f5b83d;--D:#4fa3ff;--M:#3ddc84;--A:#ff5d5d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:15px}
+h1,h2,.cond{font-family:"Barlow Condensed",Inter,sans-serif;letter-spacing:.02em}
+header{padding:16px 16px 6px;text-align:center}
+header h1{margin:0;font-size:30px;font-weight:800;text-transform:uppercase}
+header h1 span{color:var(--accent)}
+header p{margin:4px 0 0;color:var(--mute);font-size:13px}
+.wrap{max-width:1000px;margin:0 auto;padding:10px 12px 40px;display:grid;gap:14px}
+@media(min-width:860px){.wrap{grid-template-columns:1fr 1fr;align-items:start}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:600;font-size:15px;cursor:pointer;background:#24332b;color:var(--ink)}
+.btn.primary{background:var(--accent);color:#111;font-family:"Barlow Condensed";font-size:22px;font-weight:800;text-transform:uppercase;width:100%;padding:12px}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font-weight:600}
+.chip.on{background:var(--accent);color:#111;border-color:var(--accent)}
+.reels{display:grid;grid-template-columns:1.4fr 1fr;gap:8px;margin:12px 0}
+.reel{background:#0a100d;border:2px solid var(--line);border-radius:12px;height:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.reel small{position:absolute;top:5px;left:9px;font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
+.reel b{font-family:"Barlow Condensed";font-size:26px;font-weight:800;text-transform:uppercase;text-align:center;line-height:1}
+.reel.spin b{filter:blur(1px);opacity:.8}
+.reel.done{border-color:var(--accent)}
+.stripe{height:4px;width:60%;border-radius:3px;margin-top:6px}
+.status{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;margin-bottom:10px;gap:6px;flex-wrap:wrap}
+.status b{color:var(--ink)}
+.plist{display:grid;gap:6px;margin-top:10px}
+.player{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:#1d2a23;border:1px solid transparent;cursor:pointer;text-align:left;color:var(--ink);font-size:15px;width:100%}
+.player:hover:not(:disabled){border-color:var(--accent)}
+.player.sel{border-color:var(--accent);background:#2a3a1c}
+.player:disabled{opacity:.33;cursor:not-allowed}
+.player .nmx{flex:1;min-width:0}
+.player .nmx small{display:block;color:var(--mute);font-size:12px}
+.badge{font-family:"Barlow Condensed";font-weight:800;font-size:13px;width:38px;text-align:center;padding:3px 0;border-radius:6px;color:#111;flex:none}
+.bG{background:var(--G)}.bD{background:var(--D)}.bM{background:var(--M)}.bA{background:var(--A)}
+.ovr{font-family:"Barlow Condensed";font-weight:800;font-size:22px;width:34px;text-align:right;flex:none}
+.hint{color:var(--mute);font-size:13px;margin:8px 0 0;min-height:18px}
+.hint.warn{color:var(--accent)}
+.live{display:flex;justify-content:center;align-items:baseline;gap:8px;margin-bottom:10px}
+.live b{font-family:"Barlow Condensed";font-size:34px;font-weight:800;color:var(--accent)}
+.live span{color:var(--mute);font-size:13px}
+.pitch{position:relative;width:100%;max-width:440px;margin:0 auto;aspect-ratio:68/96;border-radius:14px;
+  background:repeating-linear-gradient(0deg,#1f6b3a 0 9.5%,#22743f 9.5% 19%);border:2px solid #cfe7d6aa;overflow:hidden}
+.pitch:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px solid #cfe7d677}
+.pitch:after{content:"";position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;border:2px solid #cfe7d677;border-radius:50%;transform:translate(-50%,-50%)}
+.box{position:absolute;left:25%;width:50%;height:14%;border:2px solid #cfe7d677}
+.box.top{top:-2px;border-top:0}.box.bot{bottom:-2px;border-bottom:0}
+.slot{position:absolute;transform:translate(-50%,-50%);width:24%;display:flex;flex-direction:column;align-items:center;gap:3px;z-index:2;cursor:default}
+.dot{width:46px;height:46px;border-radius:50%;background:#0d1512cc;border:2px dashed #ffffff88;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Barlow Condensed";font-weight:800;font-size:14px;color:#fff;line-height:1}
+.dot em{font-style:normal;font-size:17px}
+.slot.filled .dot{border-style:solid;color:#111}
+.slot.target{cursor:pointer}
+.slot.target .dot{border-color:var(--accent);border-style:solid;box-shadow:0 0 0 4px #d7ff3a55;animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px #d7ff3a22}}
+.nm{background:#0d1512e6;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:600;text-align:center;line-height:1.15;max-width:100%}
+.nm i{display:block;font-style:normal;color:var(--mute);font-weight:400;font-size:10px}
+.nm.pv{color:var(--accent)}
+.legend{display:flex;gap:10px;justify-content:center;margin-top:10px;font-size:12px;color:var(--mute);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:4px}
+.sq{width:10px;height:10px;border-radius:3px;display:inline-block}
+.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.overlay.on{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:480px;width:100%;padding:18px;max-height:92vh;overflow:auto}
+.modal h2{margin:0 0 6px;font-size:28px;text-transform:uppercase}
+.score{display:flex;align-items:center;gap:14px;margin:10px 0}
+.score .big{font-family:"Barlow Condensed";font-weight:800;font-size:64px;line-height:1;color:#111;background:var(--accent);border-radius:14px;padding:6px 14px}
+.score .verdict{font-family:"Barlow Condensed";font-size:24px;font-weight:800;text-transform:uppercase}
+.score small{display:block;color:var(--mute);font-size:12px;font-family:Inter}
+.lines{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.lines div{background:#1d2a23;border-radius:10px;padding:8px;text-align:center;font-size:12px;color:var(--mute)}
+.lines b{display:block;font-family:"Barlow Condensed";font-size:26px;color:var(--ink)}
+.team{display:grid;gap:5px;margin:10px 0;font-size:14px}
+.team div{display:flex;gap:8px;align-items:center}
+.team em{color:var(--mute);font-style:normal;font-size:11px;margin-left:auto;text-align:right}
+.team .warnpos{color:var(--A);font-size:11px}
+.opts{margin-top:12px;display:grid;gap:8px}
+.opts label{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--mute)}
+.foot{color:var(--mute);font-size:11px;text-align:center;margin-top:8px}
+.rules{font-size:12px;color:var(--mute);background:#1d2a23;border-radius:10px;padding:10px;margin-top:10px;line-height:1.45}
+</style>
+</head>
+<body>
+<header>
+  <h1>Roulette <span>Ligue 1</span></h1>
+  <p>Un club, une décennie, un joueur. Construis ton onze de légende (1980 → aujourd'hui).</p>
+</header>
+
+<div class="wrap">
+  <section class="card" id="spinCard">
+    <div class="status">
+      <span>Tour <b id="round">1</b>/11</span>
+      <span>Relances : <b id="jokers">3</b></span>
+      <span>Schéma : <b id="formLbl">4-3-3</b></span>
+    </div>
+    <div class="reels">
+      <div class="reel" id="reelClub"><small>Club</small><b id="clubTxt">?</b><div class="stripe" id="clubStripe"></div></div>
+      <div class="reel" id="reelDec"><small>Décennie</small><b id="decTxt">?</b></div>
+    </div>
+    <button class="btn primary" id="spinBtn">Lancer la roulette</button>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="rerollBtn" disabled style="flex:1">↻ Relancer (joker)</button>
+      <button class="btn" id="newBtn" style="flex:1">Nouvelle partie</button>
+    </div>
+    <p class="hint" id="hint">Lance la roulette pour découvrir ton premier tirage.</p>
+    <div class="plist" id="plist"></div>
+  </section>
+
+  <section class="card">
+    <div class="live" id="live"><span>Note provisoire</span><b id="liveNote">–</b></div>
+    <div class="pitch" id="pitch"><div class="box top"></div><div class="box bot"></div></div>
+    <div class="legend">
+      <span><i class="sq bG"></i>Gardien</span><span><i class="sq bD"></i>Défenseur</span>
+      <span><i class="sq bM"></i>Milieu</span><span><i class="sq bA"></i>Attaquant</span>
+    </div>
+    <div class="rules"><b style="color:var(--ink)">Calcul de la note.</b> Chaque joueur a une note (pic de niveau au club sur la décennie). Hors de son poste naturel, il perd de 3 à 10 % (ex. un DC placé latéral, un ailier placé avant-centre). Un latéral ou un milieu excentré qui joue côté opposé à son pied fort perd 3 % (les « 2 pieds » sont épargnés). La note d'équipe est la moyenne des 11 notes ajustées.</div>
+    <p class="foot">Notes, postes et pieds sont indicatifs ; sélection de joueurs non exhaustive.</p>
+  </section>
+</div>
+
+<!-- Setup modal -->
+<div class="overlay on" id="setup">
+  <div class="modal">
+    <h2>Nouvelle partie</h2>
+    <p style="color:var(--mute);margin:0 0 12px;font-size:14px">Choisis ton schéma tactique. À chaque tour, la roulette tire un club de Ligue 1 et une décennie ; tu prends un joueur de ce tirage pour un poste encore libre.</p>
+    <div class="row" id="formChips"></div>
+    <div class="opts">
+      <label><input type="checkbox" id="optClub" checked> Un club ne peut sortir qu'une seule fois</label>
+      <label><input type="checkbox" id="optDec"> Imposer au moins 2 joueurs par décennie</label>
+      <label><input type="checkbox" id="optHide"> Mode expert : notes cachées jusqu'à la fin</label>
+    </div>
+    <button class="btn primary" id="startBtn" style="margin-top:14px">C'est parti</button>
+  </div>
+</div>
+
+<!-- End modal -->
+<div class="overlay" id="end">
+  <div class="modal">
+    <h2>Ton onze type</h2>
+    <p id="endSub" style="color:var(--mute);margin:0;font-size:13px"></p>
+    <div class="score"><div class="big" id="bigNote">–</div><div><div class="verdict" id="verdict"></div><small id="verdictSub"></small></div></div>
+    <div class="lines" id="lines"></div>
+    <div class="team" id="teamList"></div>
+    <div class="row">
+      <button class="btn" id="copyBtn" style="flex:1">Copier l'équipe</button>
+      <button class="btn" id="seeBtn" style="flex:1">Voir le terrain</button>
+    </div>
+    <button class="btn primary" id="againBtn" style="margin-top:8px">Rejouer</button>
+  </div>
+</div>
+
+<script>
+// ---------- DONNÉES ----------
+// Format : Nom:Poste:Pied:Note   — Poste : GB DG DC DD MDC MC MOC MG MD AG AD BU — Pied : G (gauche), D (droit), 2 (les deux)
+const DECS = {"80":"1980-1990","90":"1990-2000","00":"2000-2010","10":"2010-2020","20":"2020-auj."};
+const DECORDER = ["80","90","00","10","20"];
+const RAW = {
+"Paris SG":{c:["#004170","#DA291C"],d:{
+"80":"Dominique Baratelli:GB:D:78;Joël Bats:GB:D:82;Jean-Marc Pilorget:DC:D:76;Philippe Jeannol:DC:D:75;Luis Fernandez:MDC:D:84;Safet Sušić:MOC:D:87;Mustapha Dahleb:MOC:D:80;Dominique Bathenay:MC:D:78;Oumar Sène:MDC:D:75;Dominique Rocheteau:AD:D:84",
+"90":"Bernard Lama:GB:D:86;Alain Roche:DC:D:81;Ricardo:DC:D:82;Patrick Colleter:DG:G:80;Antoine Kombouaré:DC:D:78;Bruno N'Gotty:DC:D:79;Paul Le Guen:MDC:D:82;Vincent Guérin:MC:D:81;Raí:MOC:D:88;Valdo:MC:D:83;Leonardo:MOC:G:87;Laurent Fournier:MC:D:79;Youri Djorkaeff:MOC:D:85;David Ginola:AG:2:86;George Weah:BU:D:90;Marco Simone:BU:D:82",
+"00":"Lionel Letizi:GB:D:77;Mickaël Landreau:GB:D:80;Mauricio Pochettino:DC:D:81;Gabriel Heinze:DG:G:83;Sylvain Armand:DG:G:80;Mamadou Sakho:DC:G:78;Jay-Jay Okocha:MOC:2:84;Claude Makélélé:MDC:D:83;Jérôme Rothen:MG:G:81;Ronaldinho:AG:D:91;Pauleta:BU:D:87;Nicolas Anelka:BU:D:84;Guillaume Hoarau:BU:D:78",
+"10":"Salvatore Sirigu:GB:D:82;Kevin Trapp:GB:D:82;Thiago Silva:DC:D:92;Marquinhos:DC:D:89;Maxwell:DG:G:84;Dani Alves:DD:D:86;Marco Verratti:MC:D:89;Thiago Motta:MDC:D:87;Blaise Matuidi:MC:G:85;Javier Pastore:MOC:D:84;Zlatan Ibrahimović:BU:D:93;Edinson Cavani:BU:D:90;Neymar:AG:D:93;Kylian Mbappé:AG:D:92;Ángel Di María:AD:G:89;Lucas Moura:AD:D:82",
+"20":"Gianluigi Donnarumma:GB:D:88;Keylor Navas:GB:D:86;Achraf Hakimi:DD:D:89;Marquinhos:DC:D:88;Nuno Mendes:DG:G:88;Willian Pacho:DC:G:85;Vitinha:MC:D:89;João Neves:MC:D:87;Fabián Ruiz:MC:G:85;Warren Zaïre-Emery:MC:D:82;Ousmane Dembélé:BU:2:92;Khvicha Kvaratskhelia:AG:D:89;Désiré Doué:AD:D:86;Lionel Messi:AD:G:89;Kylian Mbappé:AG:D:93;Bradley Barcola:AG:D:84"}},
+"Marseille":{c:["#2FAEE0","#ffffff"],d:{
+"80":"Joseph-Antoine Bell:GB:D:82;Karlheinz Förster:DC:D:85;Éric Di Meco:DG:G:80;Alain Giresse:MOC:D:87;Jean Tigana:MC:D:86;Franck Sauzée:MC:D:82;Jean-Pierre Papin:BU:D:89;Klaus Allofs:BU:G:83",
+"90":"Fabien Barthez:GB:D:85;Pascal Olmeta:GB:D:78;Basile Boli:DC:D:85;Marcel Desailly:DC:D:87;Jocelyn Angloma:DD:D:83;Éric Di Meco:DG:G:82;Laurent Blanc:DC:D:86;Didier Deschamps:MDC:D:86;Abedi Pelé:MOC:2:88;Robert Pirès:MG:G:82;Chris Waddle:AD:G:89;Alen Bokšić:BU:D:87;Rudi Völler:BU:D:86;Fabrizio Ravanelli:BU:G:83;Christophe Dugarry:BU:D:81",
+"00":"Steve Mandanda:GB:D:82;Fabien Barthez:GB:D:82;Habib Beye:DD:D:79;Taye Taiwo:DG:G:79;Souleymane Diawara:DC:D:80;Samir Nasri:MOC:D:84;Lorik Cana:MDC:D:80;Mathieu Valbuena:MOC:D:82;Franck Ribéry:AG:D:85;Didier Drogba:BU:D:90;Mamadou Niang:BU:D:83;Djibril Cissé:BU:D:81;Bakari Koné:BU:D:78;Hatem Ben Arfa:AD:G:80",
+"10":"Steve Mandanda:GB:D:86;Benjamin Mendy:DG:G:80;Jérémy Morel:DG:G:76;Nicolas N'Koulou:DC:D:82;Adil Rami:DC:D:81;Boubacar Kamara:DC:D:80;Luiz Gustavo:MDC:G:83;Dimitri Payet:MOC:D:88;Mathieu Valbuena:MOC:D:83;Morgan Sanson:MC:D:79;André-Pierre Gignac:BU:D:86;Florian Thauvin:AD:G:86;Loïc Rémy:BU:D:82;André Ayew:AG:2:81;Lucas Ocampos:AG:D:81",
+"20":"Pau López:GB:G:80;Gerónimo Rulli:GB:D:82;Leonardo Balerdi:DC:D:81;William Saliba:DC:D:85;Jonathan Clauss:DD:D:83;Chancel Mbemba:DC:D:81;Mattéo Guendouzi:MC:D:83;Valentin Rongier:MC:D:79;Adrien Rabiot:MC:G:86;Amine Harit:MOC:D:80;Dimitri Payet:MOC:D:84;Alexis Sánchez:AG:D:83;Arkadiusz Milik:BU:G:82;Pierre-Emerick Aubameyang:BU:D:83;Mason Greenwood:AD:2:85"}},
+"Lyon":{c:["#ffffff","#DA0812"],d:{
+"90":"Grégory Coupet:GB:D:80;Pascal Olmeta:GB:D:76;Florent Laville:DC:D:78;Jacek Bąk:DC:D:78;Rémi Garde:MDC:D:78;Bruno Génésio:MC:D:74;Vikash Dhorasoo:MC:D:79;Florian Maurice:BU:D:81;Ludovic Giuly:AD:D:79;Alain Caveglia:BU:D:78;Sonny Anderson:BU:D:86",
+"00":"Grégory Coupet:GB:D:88;Hugo Lloris:GB:G:85;Cris:DC:D:86;Edmílson:DC:D:83;Éric Abidal:DG:G:85;François Clerc:DD:D:79;Anthony Réveillère:DD:D:81;Juninho:MC:D:92;Michael Essien:MC:D:88;Mahamadou Diarra:MDC:D:85;Tiago:MC:D:82;Kim Källström:MC:G:83;Sidney Govou:AD:D:82;Sonny Anderson:BU:D:86;Karim Benzema:BU:D:87;Florent Malouda:AG:G:86;Sylvain Wiltord:AD:D:82;Fred:BU:D:83",
+"10":"Anthony Lopes:GB:D:83;Hugo Lloris:GB:G:86;Samuel Umtiti:DC:G:84;Dejan Lovren:DC:D:80;Christophe Jallet:DD:D:79;Ferland Mendy:DG:G:82;Maxime Gonalons:MDC:D:82;Corentin Tolisso:MC:D:84;Tanguy Ndombele:MC:D:85;Houssem Aouar:MC:D:83;Nabil Fekir:MOC:G:87;Lisandro López:BU:D:85;Bafétimbi Gomis:BU:D:82;Alexandre Lacazette:BU:D:87;Memphis Depay:AG:D:86",
+"20":"Anthony Lopes:GB:D:81;Lucas Perri:GB:D:80;Malo Gusto:DD:D:80;Castello Lukeba:DC:G:81;Nicolás Tagliafico:DG:G:81;Bruno Guimarães:MC:D:85;Lucas Paquetá:MOC:G:86;Rayan Cherki:MOC:2:85;Maxence Caqueret:MC:D:80;Corentin Tolisso:MC:D:81;Alexandre Lacazette:BU:D:85;Karl Toko Ekambi:AG:D:80;Moussa Dembélé:BU:D:82;Georges Mikautadze:BU:D:81;Malick Fofana:AG:D:82"}},
+"Monaco":{c:["#E7001A","#ffffff"],d:{
+"80":"Jean-Luc Ettori:GB:D:82;Manuel Amoros:DD:2:85;Patrick Battiston:DC:D:84;Luc Sonor:DD:D:79;Claude Puel:MDC:D:77;Glenn Hoddle:MOC:2:88;Umberto Barberis:MC:D:81;Mark Hateley:BU:D:83;George Weah:BU:D:86;Bruno Bellone:AG:D:82",
+"90":"Jean-Luc Ettori:GB:D:81;Fabien Barthez:GB:D:86;Lilian Thuram:DD:D:85;Emmanuel Petit:DG:G:82;Franck Dumas:DC:D:79;Rafael Márquez:DC:D:83;Enzo Scifo:MOC:D:85;John Collins:MC:G:81;Ali Benarbia:MOC:D:83;Youri Djorkaeff:MOC:D:85;Thierry Henry:AG:D:84;David Trezeguet:BU:D:86;Sonny Anderson:BU:D:87;Ludovic Giuly:AD:D:82",
+"00":"Flavio Roma:GB:D:82;Stéphane Ruffier:GB:D:74;Patrice Evra:DG:G:85;Rafael Márquez:DC:D:85;Sébastien Squillaci:DC:D:82;Gaël Givet:DC:D:80;Lucas Bernardi:MDC:D:81;Jérôme Rothen:MG:G:85;Akis Zikos:MDC:D:80;Jaroslav Plašil:MC:D:79;Ludovic Giuly:AD:D:87;Fernando Morientes:BU:D:87;Dado Pršo:BU:D:84;Emmanuel Adebayor:BU:D:79;Shabani Nonda:BU:G:84",
+"10":"Danijel Subašić:GB:D:85;Djibril Sidibé:DD:D:84;Benjamin Mendy:DG:G:85;Kamil Glik:DC:D:84;Ricardo Carvalho:DC:D:83;Fabinho:MDC:D:87;João Moutinho:MC:D:86;Thomas Lemar:MG:G:85;Tiémoué Bakayoko:MDC:D:84;James Rodríguez:MOC:G:86;Bernardo Silva:AD:G:88;Radamel Falcao:BU:D:88;Kylian Mbappé:AG:D:88;Anthony Martial:AG:D:81;Yannick Carrasco:AG:D:80",
+"20":"Alexander Nübel:GB:D:80;Philipp Köhn:GB:D:77;Vanderson:DD:D:80;Axel Disasi:DC:D:82;Benoît Badiashile:DC:G:81;Thilo Kehrer:DC:D:79;Aurélien Tchouaméni:MDC:D:86;Youssouf Fofana:MC:D:84;Denis Zakaria:MC:D:81;Aleksandr Golovin:MOC:D:83;Maghnes Akliouche:MOC:G:83;Wissam Ben Yedder:BU:D:86;Kevin Volland:BU:G:83;Breel Embolo:BU:D:81;Takumi Minamino:AG:D:80"}},
+"Bordeaux":{c:["#0b1e3f","#ffffff"],d:{
+"80":"Dominique Dropsy:GB:D:82;Patrick Battiston:DC:D:85;Gernot Rohr:DC:D:79;Léonard Specht:DC:D:80;Thierry Tusseau:DD:D:79;Alain Roche:DC:D:80;Alain Giresse:MOC:D:90;Jean Tigana:MC:D:88;René Girard:MDC:D:82;Jean-Marc Ferreri:MOC:D:81;Bernard Lacombe:BU:D:85;Dieter Müller:BU:D:84;Zlatko Vujović:BU:D:82;Clive Allen:BU:D:79",
+"90":"Gaëtan Huard:GB:D:82;Ulrich Ramé:GB:D:78;Bixente Lizarazu:DG:G:86;Zinedine Zidane:MOC:2:90;Richard Witschge:MC:G:80;Johan Micoud:MOC:G:84;Ali Benarbia:MOC:D:84;Christophe Dugarry:BU:D:83;Jean-Pierre Papin:BU:D:80;Sylvain Wiltord:BU:D:85;Lilian Laslandes:BU:D:82;Kaba Diawara:BU:D:76",
+"00":"Ulrich Ramé:GB:D:82;Cédric Carrasso:GB:D:83;Marc Planus:DC:D:81;Benoît Trémoulinas:DG:G:82;Mathieu Chalmé:DD:D:80;Michaël Ciani:DC:D:81;Alou Diarra:MDC:D:84;Yoann Gourcuff:MOC:D:89;Fernando:MDC:D:81;Wendel:MG:G:83;Johan Micoud:MOC:G:84;Marouane Chamakh:BU:G:84;Pauleta:BU:D:86;Jussiê:AG:D:79",
+"10":"Cédric Carrasso:GB:D:82;Benoît Costil:GB:D:81;Jules Koundé:DC:D:82;Nicolas Pallois:DC:G:78;Laurent Koscielny:DC:D:80;Jaroslav Plašil:MC:D:80;Jérémy Toulalan:MDC:D:79;Grégory Sertic:MDC:D:77;Otávio:MDC:D:78;Wahbi Khazri:MOC:G:80;Malcom:AD:G:83;François Kamano:AG:D:79;Diego Rolán:BU:D:79;Cheick Diabaté:BU:D:81",
+"20":"Benoît Costil:GB:D:78;Gaëtan Poussin:GB:D:74;Laurent Koscielny:DC:D:76;Mexer:DC:D:75;Loris Benito:DG:G:76;Yacine Adli:MOC:D:79;Otávio:MDC:D:77;Rémi Oudin:MC:D:77;Hwang Ui-jo:BU:D:79;Josh Maja:BU:D:75;Jimmy Briand:BU:D:74;Hatem Ben Arfa:AD:G:78"}},
+"Nantes":{c:["#FCD405","#00833F"],d:{
+"80":"Jean-Paul Bertrand-Demanes:GB:D:80;Maxime Bossis:DC:G:87;William Ayache:DG:G:80;Michel Der Zakarian:DC:D:76;Seth Adonkor:DD:D:76;Marcel Desailly:DC:D:80;Henri Michel:MC:D:84;Jorge Burruchaga:MOC:D:86;Didier Deschamps:MDC:D:79;José Touré:BU:G:85;Vahid Halilhodžić:BU:D:87;Loïc Amisse:AG:G:81;Bruno Baronchelli:AD:D:80",
+"90":"David Marraud:GB:D:79;Mickaël Landreau:GB:D:80;Christian Karembeu:DD:D:83;Marcel Desailly:DC:D:84;Serge Le Dizet:DD:D:77;Éric Decroix:DC:D:78;Jean-Michel Ferri:MC:D:80;Claude Makélélé:MD:D:84;Reynald Pedros:MOC:2:86;Olivier Monterrubio:MG:G:80;Patrice Loko:BU:D:86;Nicolas Ouédec:BU:D:84;Japhet N'Doram:BU:D:85",
+"00":"Mickaël Landreau:GB:D:85;Nicolas Gillet:DC:D:77;Sylvain Armand:DG:G:80;Mauro Cetto:DC:D:78;Mathieu Berson:MC:G:78;Frédéric Da Rocha:MC:D:78;Éric Carrière:MOC:D:84;Jérémy Toulalan:MDC:D:82;Emerse Faé:MC:D:77;Olivier Monterrubio:MG:G:82;Marama Vahirua:AG:D:80;Viorel Moldovan:BU:D:80",
+"10":"Ciprian Tătărușanu:GB:D:81;Rémy Riou:GB:D:77;Olivier Veigneau:DG:G:75;Léo Dubois:DD:D:79;Diego Carlos:DC:D:82;Nicolas Pallois:DC:G:80;Valentin Rongier:MC:D:80;Abdoulaye Touré:MC:D:79;Adrien Thomasson:MOC:D:77;Emiliano Sala:BU:D:82;Yacine Bammou:BU:D:74;Filip Đorđević:BU:G:76;Randal Kolo Muani:BU:D:76",
+"20":"Alban Lafont:GB:D:82;Jean-Charles Castelletto:DC:D:79;Nicolas Pallois:DC:G:80;Andrei Girotto:DC:D:77;Fábio:DD:D:76;Pedro Chirivella:MDC:D:77;Ludovic Blas:MOC:G:82;Moussa Sissoko:MC:D:79;Florent Mollet:MOC:D:78;Moses Simon:AG:2:81;Randal Kolo Muani:BU:D:83;Mostafa Mohamed:BU:D:79;Matthis Abline:BU:D:78"}},
+"Saint-Étienne":{c:["#009639","#ffffff"],d:{
+"80":"Jean Castaneda:GB:D:81;Patrick Battiston:DC:D:84;Gérard Janvion:DD:D:83;Christian Lopez:DC:D:83;Jean-François Larios:MC:D:83;Michel Platini:MOC:D:93;Johnny Rep:AD:D:85;Jacques Zimako:AG:D:81;Laurent Roussey:BU:D:80;Laurent Paganelli:AG:D:77",
+"00":"Jérémie Janot:GB:D:82;Loïc Perrin:DC:D:81;Zoumana Camara:DC:D:77;Moustapha Bayal Sall:DC:D:79;Blaise Matuidi:MC:G:82;Dimitri Payet:MOC:D:82;Julien Sablé:MDC:D:77;David Hellebuyck:MC:D:77;Bafétimbi Gomis:BU:D:83;Pascal Feindouno:AG:D:82;Frédéric Piquionne:BU:D:78;Ilan:BU:D:79",
+"10":"Stéphane Ruffier:GB:D:85;Loïc Perrin:DC:D:84;Kurt Zouma:DC:D:78;Kévin Théophile-Catherine:DD:D:77;Mathieu Debuchy:DD:D:79;Wesley Fofana:DC:D:78;Josuha Guilavogui:MDC:D:80;Fabien Lemoine:MC:G:78;Jérémy Clément:MC:D:79;Wahbi Khazri:MOC:G:79;Pierre-Emerick Aubameyang:AD:D:85;Max-Alain Gradel:AG:D:81;Romain Hamouma:AG:D:79;Robert Berić:BU:D:81",
+"20":"Étienne Green:GB:D:73;Paul Bernardoni:GB:D:74;Yvann Maçon:DD:D:74;Mickaël Nadé:DC:D:74;Dennis Appiah:DD:D:74;Mahdi Camara:MC:D:77;Lucas Gourna-Douath:MDC:D:76;Wahbi Khazri:MOC:G:79;Denis Bouanga:AG:G:82;Zuriko Davitashvili:AG:G:78;Ibrahim Sissoko:BU:D:75;Lucas Stassin:BU:D:76"}},
+"Lille":{c:["#E01E13","#20325F"],d:{
+"00":"Grégory Wimbée:GB:D:77;Tony Sylva:GB:D:81;Mickaël Landreau:GB:D:83;Rafael Schmitz:DC:D:79;Grégory Tafforeau:DG:G:79;Adil Rami:DC:D:80;Mathieu Debuchy:DD:D:80;Mathieu Bodmer:MC:D:81;Jean II Makoun:MDC:D:82;Yohan Cabaye:MC:D:83;Florent Balmont:MDC:D:79;Matt Moussilou:BU:D:77;Peter Odemwingie:AD:D:81;Kevin Mirallas:AG:D:78;Eden Hazard:AG:D:84;Michel Bastos:AG:G:82",
+"10":"Mickaël Landreau:GB:D:85;Vincent Enyeama:GB:D:82;Mike Maignan:GB:D:84;Mathieu Debuchy:DD:D:84;Adil Rami:DC:D:83;Aurélien Chedjou:DC:D:80;Gabriel Magalhães:DC:G:81;José Fonte:DC:D:80;Yohan Cabaye:MC:D:85;Idrissa Gueye:MDC:D:82;Florent Balmont:MDC:D:80;Thiago Mendes:MDC:D:79;Eden Hazard:AG:D:90;Moussa Sow:BU:D:85;Gervinho:AD:D:84;Nicolas Pépé:AD:G:86;Jonathan Bamba:AG:D:81;Victor Osimhen:BU:D:83",
+"20":"Mike Maignan:GB:D:87;Lucas Chevalier:GB:D:84;José Fonte:DC:D:82;Sven Botman:DC:G:84;Leny Yoro:DC:D:82;Bafodé Diakité:DC:D:81;Tiago Djaló:DC:D:79;Benjamin André:MDC:D:83;Renato Sanches:MC:D:82;Boubakary Soumaré:MDC:D:80;Angel Gomes:MOC:D:82;Rémy Cabella:MOC:D:79;Jonathan David:BU:D:86;Burak Yılmaz:BU:D:84;Jonathan Ikoné:AD:D:81;Edon Zhegrova:AD:G:85"}},
+"Lens":{c:["#FFD100","#E2001A"],d:{
+"90":"Guillaume Warmuz:GB:D:82;Éric Sikora:DD:D:80;Jean-Guy Wallemme:DC:D:80;Frédéric Déhu:DC:D:81;Yoann Lachor:DD:D:77;Marc-Vivien Foé:MDC:D:83;Vladimír Šmicer:MOC:D:85;Pierre Laigle:MG:G:81;Mickaël Debève:MC:D:78;Tony Vairelles:BU:D:82;Anto Drobnjak:BU:D:82;Roger Boli:BU:D:80",
+"00":"Guillaume Warmuz:GB:D:81;Charles-Hubert Itandje:GB:D:77;Vedran Runje:GB:D:81;Jacek Bąk:DC:D:80;Rigobert Song:DC:D:79;Éric Sikora:DD:D:78;Benoît Assou-Ekotto:DG:G:78;Seydou Keita:MC:D:82;Alou Diarra:MDC:D:81;El-Hadji Diouf:AG:D:80;Dagui Bakari:BU:D:77;Aruna Dindane:AD:D:81;John Utaka:BU:D:80;Kanga Akalé:AG:D:77",
+"20":"Brice Samba:GB:D:85;Kevin Danso:DC:D:83;Facundo Medina:DC:G:81;Jonathan Clauss:DD:D:84;Przemysław Frankowski:DG:D:81;Seko Fofana:MC:D:86;Cheick Doucouré:MDC:D:81;Salis Abdul Samed:MDC:D:80;Andy Diouf:MC:G:77;Gaël Kakuta:MOC:D:80;Florian Sotoca:BU:D:79;Loïs Openda:BU:D:84;Elye Wahi:BU:D:80;Wesley Saïd:AG:D:78"}},
+"Auxerre":{c:["#ffffff","#0055A4"],d:{
+"80":"Joël Bats:GB:D:83;Bruno Martini:GB:D:79;Basile Boli:DC:D:80;William Prunier:DC:D:77;Jean-Marc Ferreri:MOC:D:82;Daniel Dutuel:MC:D:75;Andrzej Szarmach:BU:D:83;Patrice Garande:BU:D:79;Éric Cantona:BU:D:83;Pascal Vahirua:AG:G:80",
+"90":"Lionel Charbonnier:GB:D:82;Bruno Martini:GB:D:80;Laurent Blanc:DC:D:85;Taribo West:DC:D:81;Alain Goma:DC:D:80;Frank Verlaat:DC:D:81;Philippe Mexès:DC:D:78;Corentin Martins:MOC:D:82;Sabri Lamouchi:MC:D:81;Moussa Saïb:MOC:D:80;Stéphane Guivarc'h:BU:D:84;Lilian Laslandes:BU:D:82;Bernard Diomède:AG:D:80;Djibril Cissé:BU:D:80",
+"00":"Fabien Cool:GB:D:79;Philippe Mexès:DC:D:84;Jean-Alain Boumsong:DC:D:82;Bacary Sagna:DD:D:82;Younès Kaboul:DC:D:78;Benoît Cheyrou:MC:D:80;Lionel Mathis:MC:D:78;Benoît Pedretti:MC:D:78;Djibril Cissé:BU:D:87;Kanga Akalé:AG:D:77;Bonaventure Kalou:AD:D:82;Luigi Pieroni:BU:D:79;Ireneusz Jeleń:BU:D:79",
+"10":"Olivier Sorin:GB:D:75;Stéphane Grichting:DC:D:76;Cédric Hengbart:DD:D:74;Benoît Pedretti:MC:D:76;Delvin N'Dinga:MDC:D:74;Valter Birsa:MOC:G:78;Ireneusz Jeleń:BU:D:79;Olivier Kapo:AG:D:75;Anthony Le Tallec:BU:D:74",
+"20":"Donovan Léon:GB:D:76;Gideon Mensah:DG:G:75;Gabriel Osho:DC:D:75;Jubal:DC:D:74;Hamed Junior Traoré:MC:D:77;Elisha Owusu:MDC:D:76;Kévin Danois:MC:D:74;Hamza Sakhi:MOC:D:75;Gaëtan Perrin:MOC:G:79;Lassine Sinayoko:AD:D:77;Ado Onaiwu:BU:D:75;M'Baye Niang:BU:D:75"}},
+"Rennes":{c:["#E13327","#000000"],d:{
+"00":"Petr Čech:GB:G:82;Andreas Isaksson:GB:D:80;Nicolas Douchez:GB:D:76;Rod Fanni:DD:D:79;Jacques Faty:DC:D:76;Petter Hansson:DC:D:78;Cyril Jeunechamp:DD:D:77;Yoann Gourcuff:MOC:D:78;Kim Källström:MC:G:82;Stéphane Mbia:MDC:D:79;Olivier Monterrubio:MG:G:79;Jimmy Briand:AG:D:81;Alexander Frei:BU:D:84;Asamoah Gyan:BU:D:80;Moussa Sow:BU:D:76",
+"10":"Benoît Costil:GB:D:81;Édouard Mendy:GB:D:79;Romain Danzé:DD:D:77;Damien Da Silva:DC:D:78;Hamari Traoré:DD:D:79;Benjamin André:MDC:D:81;Eduardo Camavinga:MC:G:82;Yoann Gourcuff:MOC:D:77;Wahbi Khazri:MOC:G:79;Ousmane Dembélé:AD:2:84;Paul-Georges Ntep:AG:D:77;Ismaïla Sarr:AD:D:81;Hatem Ben Arfa:AD:G:80;M'Baye Niang:BU:D:78",
+"20":"Alfred Gomis:GB:D:80;Steve Mandanda:GB:D:80;Hamari Traoré:DD:D:78;Nayef Aguerd:DC:G:82;Arthur Theate:DC:G:81;Adrien Truffert:DG:G:80;Eduardo Camavinga:MC:G:84;Benjamin Bourigeaud:MC:D:83;Lovro Majer:MOC:G:81;Ludovic Blas:MOC:G:80;Désiré Doué:AG:D:80;Martin Terrier:AG:D:84;Gaëtan Laborde:BU:G:82;Jérémy Doku:AG:D:82;Amine Gouiri:BU:G:81;Arnaud Kalimuendo:BU:D:81"}},
+"Nice":{c:["#C8102E","#000000"],d:{
+"00":"Bruno Valencony:GB:D:77;Hugo Lloris:GB:G:82;Cédric Varrault:DC:D:76;Jacques Abardonado:DC:D:76;Kader Mangane:DC:D:76;Florent Balmont:MDC:D:79;Ederson:MOC:G:81;Emerse Faé:MC:D:77;Lilian Laslandes:BU:D:77;Marama Vahirua:AG:D:79;Loïc Rémy:BU:D:80;Bakari Koné:BU:D:81;Mamadou Bagayoko:BU:D:76",
+"10":"David Ospina:GB:D:82;Walter Benítez:GB:D:82;Dante:DC:G:82;Malang Sarr:DC:G:78;Ricardo Pereira:DD:D:82;Jean Michaël Seri:MC:D:85;Wylan Cyprien:MC:D:79;Valentin Eysseric:MOC:D:77;Younès Belhanda:MOC:D:81;Hatem Ben Arfa:AD:G:86;Mario Balotelli:BU:D:84;Alassane Pléa:BU:D:81;Allan Saint-Maximin:AG:D:79;Darío Cvitanich:BU:D:76",
+"20":"Walter Benítez:GB:D:81;Marcin Bułka:GB:D:81;Jean-Clair Todibo:DC:D:82;Dante:DC:G:79;Melvin Bard:DG:G:76;Youcef Atal:DD:D:79;Jonathan Clauss:DD:D:80;Khéphren Thuram:MC:D:83;Hicham Boudaoui:MC:D:79;Morgan Sanson:MC:D:77;Amine Gouiri:BU:G:82;Kasper Dolberg:BU:D:79;Terem Moffi:BU:D:80;Gaëtan Laborde:BU:G:80;Evann Guessand:AD:D:80"}},
+"Montpellier":{c:["#F37021","#1E3C78"],d:{
+"90":"Bruno Martini:GB:D:80;Laurent Blanc:DC:D:85;Júlio César:DC:D:82;Kader Ferhaoui:MC:D:77;Carlos Valderrama:MOC:D:85;Laurent Robert:MG:G:80;Éric Cantona:BU:D:84",
+"10":"Geoffrey Jourdren:GB:D:79;Benjamin Lecomte:GB:D:80;Mapou Yanga-Mbiwa:DC:D:81;Hilton:DC:D:80;Henri Bedimo:DG:G:79;Garry Bocaly:DD:D:76;Younès Belhanda:MOC:D:83;Rémy Cabella:MOC:D:81;Benjamin Stambouli:MDC:D:79;Olivier Giroud:BU:G:86;Souleymane Camara:AG:D:78;John Utaka:AD:D:79",
+"20":"Benjamin Lecomte:GB:D:78;Mamadou Sakho:DC:G:77;Téji Savanier:MC:D:83;Jordan Ferri:MC:D:77;Wahbi Khazri:MOC:G:80;Andy Delort:BU:D:81;Elye Wahi:BU:D:79;Arnaud Nordin:AG:D:75;Akor Adams:BU:D:77"}},
+"Sochaux":{c:["#FFD100","#003E7E"],d:{
+"80":"Albert Rust:GB:D:79;Faruk Hadžibegić:DC:D:80;Bernard Genghini:MOC:G:84;Franck Sauzée:MC:D:81;Yannick Stopyra:BU:D:82;Stéphane Paille:BU:D:81;Philippe Anziani:BU:D:79",
+"00":"Teddy Richert:GB:D:81;Souleymane Diawara:DC:D:78;Omar Daf:DD:D:77;Ibrahim Tall:DC:D:75;Benoît Pedretti:MC:D:82;Camel Meriem:MOC:G:80;Mickaël Isabey:MC:D:76;Pierre-Alain Frau:BU:D:81;Francileudo Santos:BU:D:82;Jérémy Ménez:AD:D:77;Mevlüt Erdinç:BU:D:77",
+"10":"Teddy Richert:GB:D:78;Sébastien Corchia:DD:D:77;Marvin Martin:MOC:D:82;Ryad Boudebouz:MOC:G:79;Brown Ideye:BU:D:79;Modibo Maïga:BU:D:79;Cédric Bakambu:BU:D:76"}},
+"Toulouse":{c:["#5B2C83","#ffffff"],d:{
+"80":"Philippe Bergeroo:GB:D:78;Alberto Tarantini:DG:G:79;Gérald Passi:MOC:D:80;Alberto Márcico:MOC:D:83;Yannick Stopyra:BU:D:81;Dominique Rocheteau:AD:D:80",
+"00":"Nicolas Douchez:GB:D:78;Mauro Cetto:DC:D:77;Daniel Congré:DC:D:77;Albin Ebondo:DD:D:74;Étienne Capoue:MDC:D:77;Moussa Sissoko:MC:D:79;Achille Emana:MOC:D:80;André-Pierre Gignac:BU:D:82;Johan Elmander:BU:D:82;Daniel Braaten:AD:D:76",
+"10":"Ali Ahamada:GB:D:77;Alban Lafont:GB:D:79;Daniel Congré:DC:D:78;Serge Aurier:DD:D:79;Issa Diop:DC:D:80;Étienne Capoue:MDC:D:79;Moussa Sissoko:MC:D:79;Óscar Trejo:MOC:D:78;Jimmy Durmaz:MG:D:74;Wissam Ben Yedder:BU:D:83;Martin Braithwaite:AG:D:77;Emmanuel Rivière:BU:D:78;Max-Alain Gradel:AG:D:77",
+"20":"Guillaume Restes:GB:D:79;Rasmus Nicolaisen:DC:D:77;Logan Costa:DC:D:79;Mikkel Desler:DD:D:75;Charlie Cresswell:DC:D:77;Stijn Spierings:MDC:D:77;Vincent Sierro:MC:D:78;Cristian Cásseres:MC:D:77;Aron Dønnum:MG:D:77;Zakaria Aboukhlal:AD:G:79;Thijs Dallinga:BU:D:80;Yann Gboho:AG:D:76;Frank Magri:BU:D:76"}},
+"Strasbourg":{c:["#009FE3","#ffffff"],d:{
+"10":"Matz Sels:GB:D:80;Kenny Lala:DD:D:78;Stefan Mitrović:DC:D:78;Dimitri Liénard:MG:G:78;Anthony Gonçalves:MC:D:75;Jean-Ricner Bellegarde:MOC:D:76;Adrien Thomasson:MOC:D:77;Ludovic Ajorque:BU:G:80;Nuno Da Costa:BU:D:75;Lebo Mothiba:BU:D:76",
+"20":"Matz Sels:GB:D:81;Đorđe Petrović:GB:D:80;Alexander Djiku:DC:D:78;Gerzino Nyamsi:DC:D:75;Frédéric Guilbert:DD:D:76;Guéla Doué:DD:D:78;Dimitri Liénard:MG:G:77;Jean-Ricner Bellegarde:MOC:D:79;Adrien Thomasson:MOC:D:77;Habib Diarra:MC:D:81;Andrey Santos:MC:D:80;Ludovic Ajorque:BU:G:79;Habib Diallo:BU:D:80;Kevin Gameiro:BU:D:76;Emanuel Emegha:BU:D:78;Dilane Bakwa:AD:G:79"}}
+};
+
+const CAT = {GB:"G",DG:"D",DC:"D",DD:"D",MDC:"M",MC:"M",MOC:"M",MG:"M",MD:"M",AG:"A",AD:"A",BU:"A"};
+const FOOT = {G:"Gaucher",D:"Droitier","2":"2 pieds"};
+const DB = {};
+for(const [club,o] of Object.entries(RAW)){
+  DB[club] = {c:o.c, d:{}};
+  for(const [k,s] of Object.entries(o.d)){
+    DB[club].d[k] = s.split(";").map(x=>{const [n,pos,f,r]=x.split(":");return {n:n.trim(),pos,p:CAT[pos],f,r:+r};});
+  }
+}
+const CLUBS = Object.keys(DB);
+
+// ---------- SCHÉMAS ----------
+// [catégorie, libellé du poste, x, y]
+const FORMS = {
+"4-3-3":[["G","GB",50,90],["D","DG",14,70],["D","DC",37,75],["D","DC",63,75],["D","DD",86,70],["M","MC",22,49],["M","MDC",50,55],["M","MC",78,49],["A","AG",16,22],["A","BU",50,15],["A","AD",84,22]],
+"4-4-2":[["G","GB",50,90],["D","DG",14,70],["D","DC",37,75],["D","DC",63,75],["D","DD",86,70],["M","MG",12,45],["M","MC",37,51],["M","MC",63,51],["M","MD",88,45],["A","BU",34,19],["A","BU",66,19]],
+"3-5-2":[["G","GB",50,90],["D","DC",22,73],["D","DC",50,77],["D","DC",78,73],["M","MG",10,46],["M","MC",32,55],["M","MOC",50,41],["M","MC",68,55],["M","MD",90,46],["A","BU",34,17],["A","BU",66,17]],
+"4-2-3-1":[["G","GB",50,90],["D","DG",14,70],["D","DC",37,75],["D","DC",63,75],["D","DD",86,70],["M","MDC",35,57],["M","MDC",65,57],["M","MG",16,36],["M","MOC",50,38],["M","MD",84,36],["A","BU",50,15]]
+};
+const PNAME = {G:"Gardien",D:"Défenseur",M:"Milieu",A:"Attaquant"};
+
+// ---------- NOTATION ----------
+// Coefficient d'adaptation poste naturel -> poste occupé
+const FIT = {
+ GB:{GB:1},
+ DC:{DC:1,DG:.92,DD:.92},
+ DG:{DG:1,DD:.95,DC:.93},
+ DD:{DD:1,DG:.95,DC:.93},
+ MDC:{MDC:1,MC:.97,MOC:.92,MG:.9,MD:.9},
+ MC:{MC:1,MDC:.96,MOC:.96,MG:.94,MD:.94},
+ MOC:{MOC:1,MC:.96,MG:.95,MD:.95,MDC:.9},
+ MG:{MG:1,MD:.95,MOC:.94,MC:.93,MDC:.9},
+ MD:{MD:1,MG:.95,MOC:.94,MC:.93,MDC:.9},
+ AG:{AG:1,AD:.97,BU:.92},
+ AD:{AD:1,AG:.97,BU:.92},
+ BU:{BU:1,AG:.92,AD:.92}
+};
+const LEFT_SIDE=["DG","MG"], RIGHT_SIDE=["DD","MD"];
+function adj(pl, slotLbl){
+  let k = (FIT[slotLbl]||{})[pl.pos] ?? .9;
+  if(LEFT_SIDE.includes(slotLbl) && pl.f==="D") k*=.97;
+  if(RIGHT_SIDE.includes(slotLbl) && pl.f==="G") k*=.97;
+  return Math.round(pl.r*k);
+}
+function teamNote(){
+  const f=S.slots.filter(s=>s.pl); if(!f.length) return null;
+  return Math.round(f.reduce((a,s)=>a+adj(s.pl,s.lbl),0)/f.length);
+}
+function verdict(n){
+  if(n>=88) return ["Équipe de légende","Ballon d'or collectif, rien ne lui résiste."];
+  if(n>=85) return ["Champion de France","Le titre se joue chez toi."];
+  if(n>=82) return ["Ligue des champions","Une équipe qui fait peur en Europe."];
+  if(n>=79) return ["Coupe d'Europe","Solide, régulière, européenne."];
+  if(n>=76) return ["Milieu de tableau","Des bons joueurs, il manque des stars."];
+  return ["Lutte pour le maintien","La roulette ne t'a pas gâté…"];
+}
+
+// ---------- ÉTAT ----------
+let S;
+function fresh(form){
+  return {form, slots:FORMS[form].map(s=>({cat:s[0],lbl:s[1],x:s[2],y:s[3],pl:null})),
+    round:1,jokers:3,usedCombos:new Set(),usedClubs:new Set(),cur:null,sel:null,spinning:false,
+    oneClub:$("optClub").checked, decRule:$("optDec").checked, hide:$("optHide").checked};
+}
+function $(id){return document.getElementById(id);}
+function freeCats(){const f={};S.slots.forEach(s=>{if(!s.pl)f[s.cat]=(f[s.cat]||0)+1});return f;}
+function inTeam(name){return S.slots.some(s=>s.pl&&s.pl.n===name);}
+function decCount(){const c={};S.slots.forEach(s=>{if(s.pl)c[s.pl.dec]=(c[s.pl.dec]||0)+1});return c;}
+function remaining(){return S.slots.filter(s=>!s.pl).length;}
+
+function validCombos(){
+  const fc=freeCats(); const out=[];
+  let forceDecs=null;
+  if(S.decRule){
+    const dc=decCount(); let need=0; const miss=[];
+    DECORDER.forEach(d=>{const n=Math.max(0,2-(dc[d]||0)); if(n>0){need+=n;miss.push(d);}});
+    if(need>=remaining()) forceDecs=new Set(miss);
+  }
+  for(const club of CLUBS){
+    if(S.oneClub && S.usedClubs.has(club)) continue;
+    for(const dec of Object.keys(DB[club].d)){
+      if(S.usedCombos.has(club+"|"+dec)) continue;
+      if(forceDecs && !forceDecs.has(dec)) continue;
+      if(DB[club].d[dec].some(p=>fc[p.p] && !inTeam(p.n))) out.push([club,dec]);
+    }
+  }
+  return out;
+}
+
+// ---------- RENDU ----------
+function short(n){const parts=n.split(" ");return parts.length>2?parts.slice(-2).join(" "):n;}
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function renderPitch(){
+  const p=$("pitch"); p.querySelectorAll(".slot").forEach(e=>e.remove());
+  S.slots.forEach((s,i)=>{
+    const el=document.createElement("div"); el.className="slot"+(s.pl?" filled":"");
+    el.style.left=s.x+"%"; el.style.top=s.y+"%";
+    const target = S.sel && !s.pl && s.cat===S.sel.p;
+    if(target) el.classList.add("target");
+    const dot=document.createElement("div"); dot.className="dot";
+    if(s.pl){
+      dot.style.background=`var(--${s.cat})`;
+      dot.innerHTML = S.hide ? s.lbl : `${s.lbl}<em>${adj(s.pl,s.lbl)}</em>`;
+    } else dot.textContent=s.lbl;
+    el.appendChild(dot);
+    if(s.pl){const nm=document.createElement("div"); nm.className="nm";
+      nm.innerHTML=`${esc(short(s.pl.n))}<i>${esc(s.pl.club)} · ${DECS[s.pl.dec].replace("-auj."," →")}</i>`; el.appendChild(nm);}
+    else if(target && !S.hide){const nm=document.createElement("div"); nm.className="nm pv";
+      const v=adj(S.sel,s.lbl); nm.textContent = v===S.sel.r ? `→ ${v}` : `→ ${v} (${v-S.sel.r})`; el.appendChild(nm);}
+    if(target) el.onclick=()=>place(i);
+    p.appendChild(el);
+  });
+  const n=teamNote();
+  $("liveNote").textContent = S.hide ? "?" : (n ?? "–");
+}
+
+function renderStatus(){
+  $("round").textContent=Math.min(S.round,11); $("jokers").textContent=S.jokers; $("formLbl").textContent=S.form;
+  $("rerollBtn").disabled = !S.cur || S.jokers<=0 || S.spinning;
+  $("spinBtn").disabled = !!S.cur || S.spinning || remaining()===0;
+}
+
+function renderList(){
+  const L=$("plist"); L.innerHTML="";
+  if(!S.cur) return;
+  const fc=freeCats(); const order={G:0,D:1,M:2,A:3};
+  const list=[...DB[S.cur.club].d[S.cur.dec]].sort((a,b)=>order[a.p]-order[b.p]||b.r-a.r);
+  list.forEach(p=>{
+    const b=document.createElement("button"); b.className="player";
+    if(S.sel && S.sel.n===p.n) b.classList.add("sel");
+    const taken=inTeam(p.n);
+    b.disabled = !fc[p.p] || taken;
+    const extra = taken ? " · déjà pris" : (!fc[p.p] ? " · poste complet" : "");
+    b.innerHTML=`<span class="badge b${p.p}">${p.pos}</span><span class="nmx">${esc(p.n)}<small>${FOOT[p.f]}${extra}</small></span>`+
+      (S.hide?"":`<span class="ovr">${p.r}</span>`);
+    b.onclick=()=>choose(p);
+    L.appendChild(b);
+  });
+}
+
+function hint(t,warn){const h=$("hint"); h.textContent=t; h.className="hint"+(warn?" warn":"");}
+function renderAll(){renderPitch();renderStatus();renderList();}
+
+// ---------- ACTIONS ----------
+function spin(isReroll){
+  const combos=validCombos();
+  if(!combos.length){hint("Plus aucun tirage possible avec ces règles — désactive une option et relance une partie.",true);return;}
+  const [club,dec]=combos[Math.floor(Math.random()*combos.length)];
+  S.spinning=true; S.sel=null; S.cur=null; renderAll();
+  const rc=$("reelClub"), rd=$("reelDec"); rc.className="reel spin"; rd.className="reel spin";
+  hint(isReroll?"Joker utilisé… la roulette tourne !":"La roulette tourne…");
+  let t=0, delay=45; const total=1900;
+  function tick(){
+    const c=CLUBS[Math.floor(Math.random()*CLUBS.length)];
+    $("clubTxt").textContent=c; $("clubStripe").style.background=`linear-gradient(90deg,${DB[c].c[0]} 50%,${DB[c].c[1]} 50%)`;
+    $("decTxt").textContent=DECS[DECORDER[Math.floor(Math.random()*DECORDER.length)]];
+    t+=delay; delay*=1.09;
+    if(t<total) setTimeout(tick,delay);
+    else{
+      $("clubTxt").textContent=club; $("clubStripe").style.background=`linear-gradient(90deg,${DB[club].c[0]} 50%,${DB[club].c[1]} 50%)`;
+      $("decTxt").textContent=DECS[dec];
+      rc.className="reel done"; rd.className="reel done";
+      S.cur={club,dec}; S.usedCombos.add(club+"|"+dec); S.spinning=false;
+      hint(`${club}, ${DECS[dec]} : choisis un joueur pour un poste libre.`);
+      renderAll();
+    }
+  }
+  tick();
+}
+
+function choose(p){
+  S.sel={...p, club:S.cur.club, dec:S.cur.dec};
+  const idx=S.slots.map((s,i)=>(!s.pl&&s.cat===p.p)?i:-1).filter(i=>i>=0);
+  if(idx.length===1){place(idx[0]);return;}
+  hint(`Touche un poste en surbrillance pour placer ${p.n} (${p.pos}, ${FOOT[p.f].toLowerCase()}).`,true);
+  renderAll();
+  if(window.innerWidth<860) $("pitch").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function place(i){
+  const s=S.slots[i]; if(!S.sel||s.pl||s.cat!==S.sel.p) return;
+  s.pl=S.sel; S.usedClubs.add(S.sel.club); S.sel=null; S.cur=null; S.round++;
+  $("reelClub").className="reel"; $("reelDec").className="reel";
+  renderAll();
+  if(remaining()===0){finish();return;}
+  const v=adj(s.pl,s.lbl);
+  hint(`${s.pl.n} placé en ${s.lbl}`+(S.hide?"":` (${v}${v<s.pl.r?", hors poste naturel":""})`)+`. Relance la roulette !`);
+  if(window.innerWidth<860) setTimeout(()=>$("spinCard").scrollIntoView({behavior:"smooth",block:"start"}),400);
+}
+
+function lineNote(cats){
+  const f=S.slots.filter(s=>s.pl&&cats.includes(s.cat));
+  return f.length?Math.round(f.reduce((a,s)=>a+adj(s.pl,s.lbl),0)/f.length):"–";
+}
+
+function finish(){
+  S.hide=false; renderAll();
+  hint("Équipe complète !");
+  const n=teamNote(); const [v,vs]=verdict(n);
+  $("bigNote").textContent=n; $("verdict").textContent=v; $("verdictSub").textContent=vs;
+  $("lines").innerHTML=`<div>Défense<b>${lineNote(["G","D"])}</b></div><div>Milieu<b>${lineNote(["M"])}</b></div><div>Attaque<b>${lineNote(["A"])}</b></div>`;
+  const order={G:0,D:1,M:2,A:3};
+  const rows=S.slots.map(s=>({s,pl:s.pl,a:adj(s.pl,s.lbl)})).sort((x,y)=>order[x.s.cat]-order[y.s.cat]);
+  const clubs=new Set(rows.map(r=>r.pl.club)).size;
+  $("endSub").textContent=`${S.form} · ${clubs} clubs différents`;
+  $("teamList").innerHTML=rows.map(r=>`<div><span class="badge b${r.s.cat}">${r.s.lbl}</span><span>${esc(r.pl.n)}<br><span style="color:var(--mute);font-size:11px">${r.pl.pos} · ${FOOT[r.pl.f]}</span>${r.a<r.pl.r?` <span class="warnpos">${r.a-r.pl.r}</span>`:""}</span><em>${esc(r.pl.club)}<br>${DECS[r.pl.dec]}</em><b class="ovr">${r.a}</b></div>`).join("");
+  $("end").classList.add("on");
+}
+
+function teamText(){
+  const order={G:0,D:1,M:2,A:3};
+  const rows=S.slots.map(s=>({s,pl:s.pl,a:adj(s.pl,s.lbl)})).sort((x,y)=>order[x.s.cat]-order[y.s.cat]);
+  const n=teamNote();
+  return `Mon onze type Ligue 1 (${S.form}) – note ${n}/100, ${verdict(n)[0]}\n`+
+    rows.map(r=>`${r.s.lbl} – ${r.pl.n} (${r.pl.club}, ${DECS[r.pl.dec]}) ${r.a}`).join("\n");
+}
+
+// ---------- SETUP ----------
+let chosenForm="4-3-3";
+function buildChips(){
+  const w=$("formChips"); w.innerHTML="";
+  Object.keys(FORMS).forEach(f=>{const b=document.createElement("button"); b.className="chip"+(f===chosenForm?" on":""); b.textContent=f;
+    b.onclick=()=>{chosenForm=f;buildChips();}; w.appendChild(b);});
+}
+buildChips();
+$("startBtn").onclick=()=>{S=fresh(chosenForm); $("setup").classList.remove("on");
+  $("clubTxt").textContent="?"; $("decTxt").textContent="?"; $("clubStripe").style.background="none";
+  $("reelClub").className="reel"; $("reelDec").className="reel";
+  hint("Lance la roulette pour découvrir ton premier tirage."); renderAll();};
+$("spinBtn").onclick=()=>spin(false);
+$("rerollBtn").onclick=()=>{if(S.jokers>0&&S.cur){S.jokers--;spin(true);}};
+$("newBtn").onclick=()=>{$("setup").classList.add("on");};
+$("againBtn").onclick=()=>{$("end").classList.remove("on");$("setup").classList.add("on");};
+$("seeBtn").onclick=()=>{$("end").classList.remove("on");};
+$("copyBtn").onclick=async()=>{
+  try{await navigator.clipboard.writeText(teamText()); $("copyBtn").textContent="Copié ✓";}
+  catch(e){$("copyBtn").textContent="Copie impossible";}
+  setTimeout(()=>$("copyBtn").textContent="Copier l'équipe",1800);
+};
+S=fresh("4-3-3"); renderAll();
+</script>
+</body>
+</html>
